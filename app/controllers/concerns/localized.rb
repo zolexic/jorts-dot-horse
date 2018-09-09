@@ -10,8 +10,11 @@ module Localized
   private
 
   def set_locale
-    I18n.locale = default_locale
-    I18n.locale = current_user.locale if user_signed_in?
+    I18n.locale = if user_signed_in?
+                    current_user.locale
+                  else
+                    session[:locale] ||= default_locale
+                  end
   rescue I18n::InvalidLocale
     I18n.locale = default_locale
   end
