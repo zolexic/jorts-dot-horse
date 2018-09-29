@@ -6,5 +6,8 @@
   %td.reject_media
     - if domain_block.reject_media? || domain_block.suspend?
       %i.fa.fa-check
+  %td.reject_reports
+    - if domain_block.reject_reports? || domain_block.suspend?
+      %i.fa.fa-check
   %td
     = table_link_to 'undo', t('admin.domain_blocks.undo'), admin_domain_block_path(domain_block)
