@@ -152,9 +152,15 @@ class Header extends ImmutablePureComponent {
     }
 
     const content         = { __html: account.get('note_emojified') };
+    const acctName        = this.props.account.get('acct');
     const displayNameHtml = { __html: account.get('display_name_html') };
     const fields          = account.get('fields');
     const badge           = account.get('bot') ? (<div className='roles'><div className='account-role bot'><FormattedMessage id='account.badges.bot' defaultMessage='Bot' /></div></div>) : null;
+
+    function horsieCheck() {
+      const isJorts = !/\@/g.test(acctName);
+      return isJorts ? <img draggable='false' className='emojione' alt='Horsiefied' title='Horsiefied' src='https://media.jorts.horse/horse-media/custom_emojis/images/000/006/257/original/horsiefied.png' /> : '';
+    }
 
     return (
       <div className={classNames('account__header', { inactive: !!account.get('moved') })} style={{ backgroundImage: `url(${account.get('header')})` }}>
@@ -162,7 +168,9 @@ class Header extends ImmutablePureComponent {
           <Avatar account={account} />
 
           <span className='account__header__display-name' dangerouslySetInnerHTML={displayNameHtml} />
-          <span className='account__header__username'>@{account.get('acct')} {lockedIcon}</span>
+          <span className='account__header__horsie'>{horsieCheck()}</span>
+          <span className='account__header__username'>@{acctName} {lockedIcon}</span>
+//        <span className='account__header__username'>@{account.get('acct')} {lockedIcon}</span>
 
           {badge}
 
