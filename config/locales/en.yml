@@ -2,7 +2,7 @@
 en:
   about:
     about_hashtag_html: These are public toots tagged with <strong>#%{hashtag}</strong>. You can interact with them if you have an account anywhere in the fediverse.
-    about_mastodon_html: Mastodon is a social network based on open web protocols and free, open-source software. It is decentralized like e-mail.
+    about_mastodon_html: JORTS DOT HORSE is a social network based on open web protocols and free, open-horse software. It is decentralized, like HUGE JORTS.
     about_this: About
     administered_by: 'Administered by:'
     api: API
@@ -16,16 +16,16 @@ en:
       <h3>A good place for rules</h3>
       <p>The extended description has not been set up yet.</p>
     features:
-      humane_approach_body: Learning from failures of other networks, Mastodon aims to make ethical design choices to combat the misuse of social media.
+      humane_approach_body: Learning from failures of other networks, JORTS DOT HORSE aims to make ethical design choices to combat the misuse of social media.
       humane_approach_title: A more humane approach
-      not_a_product_body: Mastodon is not a commercial network. No advertising, no data mining, no walled gardens. There is no central authority.
-      not_a_product_title: You’re a person, not a product
+      not_a_product_body: JORTS DOT HORSE is not a commercial network. No advertising, no data mining, no walled gardens. There is no central authority.
+      not_a_product_title: You’re a horse, not a product
       real_conversation_body: With 500 characters at your disposal and support for granular content and media warnings, you can express yourself the way you want to.
-      real_conversation_title: Built for real conversation
-      within_reach_body: Multiple apps for iOS, Android, and other platforms thanks to a developer-friendly API ecosystem allow you to keep up with your friends anywhere.
+      real_conversation_title: Built for real shitposting
+      within_reach_body: Multiple apps for iOS, Android, and other platforms thanks to a developer-friendly API ecosystem allow you to keep up with your herd anywhere.
       within_reach_title: Always within reach
     generic_description: "%{domain} is one server in the network"
-    hosted_on: Mastodon hosted on %{domain}
+    hosted_on: JORTS DOT HORSE hosted on %{domain}
     learn_more: Learn more
     other_instances: Instance list
     privacy_policy: Privacy policy
