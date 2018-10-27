@@ -29,7 +29,7 @@ services:
 
   web:
 #    build: .
-    image: tootsuite/mastodon:v2.5.0
+    image: zolexic/jorts-dot-horse:new
     restart: always
     env_file: .env.production
     environment:
@@ -52,7 +52,7 @@ services:
 
   streaming:
 #    build: .
-    image: tootsuite/mastodon:v2.5.0
+    image: zolexic/jorts-dot-horse:new
     restart: always
     env_file: .env.production
     command: yarn start
@@ -67,7 +67,7 @@ services:
 
   sidekiq:
 #    build: .
-    image: tootsuite/mastodon:v2.5.0
+    image: zolexic/jorts-dot-horse:new
     restart: always
     env_file: .env.production
     environment:
