@@ -170,7 +170,6 @@ class Header extends ImmutablePureComponent {
           <span className='account__header__display-name' dangerouslySetInnerHTML={displayNameHtml} />
           <span className='account__header__horsie'>{horsieCheck()}</span>
           <span className='account__header__username'>@{acctName} {lockedIcon}</span>
-//        <span className='account__header__username'>@{account.get('acct')} {lockedIcon}</span>
 
           {badge}
 
