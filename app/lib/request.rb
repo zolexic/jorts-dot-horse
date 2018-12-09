@@ -2,17 +2,6 @@
 
 require 'ipaddr'
 require 'socket'
-require 'resolv'
-
-# Monkey-patch the HTTP.rb timeout class to avoid using a timeout block
-# around the Socket#open method, since we use our own timeout blocks inside
-# that method
-class HTTP::Timeout::PerOperation
-  def connect(socket_class, host, port, nodelay = false)
-    @socket = socket_class.open(host, port)
-    @socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1) if nodelay
-  end
-end
 
 class Request
   REQUEST_TARGET = '(request-target)'
@@ -56,7 +45,7 @@ class Request
     end
 
     begin
-      yield response.extend(ClientLimit) if block_given?
+      yield response.extend(ClientLimit)
     ensure
       http_client.close
     end
@@ -105,11 +94,7 @@ class Request
   end
 
   def timeout
-    # We enforce a 1s timeout on DNS resolving, 10s timeout on socket opening
-    # and 5s timeout on the TLS handshake, meaning the worst case should take
-    # about 16s in total
-
-    { connect: 5, read: 10, write: 10 }
+    { write: 10, connect: 10, read: 10 }
   end
 
   def http_client
@@ -154,34 +139,17 @@ class Request
   class Socket < TCPSocket
     class << self
       def open(host, *args)
-        return super(host, *args) if thru_hidden_service?(host)
-
+        return super host, *args if thru_hidden_service? host
         outer_e = nil
-
-        Resolv::DNS.open do |dns|
-          dns.timeouts = 1
-
-          addresses = dns.getaddresses(host).take(2)
-          time_slot = 10.0 / addresses.size
-
-          addresses.each do |address|
-            begin
-              raise Mastodon::HostValidationError if PrivateAddressCheck.private_address?(IPAddr.new(address.to_s))
-
-              ::Timeout.timeout(time_slot, HTTP::TimeoutError) do
-                return super(address.to_s, *args)
-              end
-            rescue => e
-              outer_e = e
-            end
+        Addrinfo.foreach(host, nil, nil, :SOCK_STREAM) do |address|
+          begin
+            raise Mastodon::HostValidationError if PrivateAddressCheck.private_address? IPAddr.new(address.ip_address)
+            return super address.ip_address, *args
+          rescue => e
+            outer_e = e
           end
         end
-
-        if outer_e
-          raise outer_e
-        else
-          raise SocketError, "No address for #{host}"
-        end
+        raise outer_e if outer_e
       end
 
       alias new open

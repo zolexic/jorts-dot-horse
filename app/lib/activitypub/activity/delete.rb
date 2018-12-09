@@ -12,10 +12,8 @@ class ActivityPub::Activity::Delete < ActivityPub::Activity
   private
 
   def delete_person
-    lock_or_return("delete_in_progress:#{@account.id}") do
-      SuspendAccountService.new.call(@account)
-      @account.destroy!
-    end
+    SuspendAccountService.new.call(@account)
+    @account.destroy!
   end
 
   def delete_note

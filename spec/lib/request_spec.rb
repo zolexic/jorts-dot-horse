@@ -48,11 +48,9 @@ describe Request do
       end
 
       it 'executes a HTTP request when the first address is private' do
-        resolver = double
-
-        allow(resolver).to receive(:getaddresses).with('example.com').and_return(%w(0.0.0.0 2001:4860:4860::8844))
-        allow(resolver).to receive(:timeouts=).and_return(nil)
-        allow(Resolv::DNS).to receive(:open).and_yield(resolver)
+        allow(Addrinfo).to receive(:foreach).with('example.com', nil, nil, :SOCK_STREAM)
+                                            .and_yield(Addrinfo.new(["AF_INET", 0, "example.com", "0.0.0.0"], :PF_INET, :SOCK_STREAM))
+                                            .and_yield(Addrinfo.new(["AF_INET6", 0, "example.com", "2001:4860:4860::8844"], :PF_INET6, :SOCK_STREAM))
 
         expect { |block| subject.perform &block }.to yield_control
         expect(a_request(:get, 'http://example.com')).to have_been_made.once
@@ -83,12 +81,9 @@ describe Request do
       end
 
       it 'raises Mastodon::ValidationError' do
-        resolver = double
-
-        allow(resolver).to receive(:getaddresses).with('example.com').and_return(%w(0.0.0.0 2001:db8::face))
-        allow(resolver).to receive(:timeouts=).and_return(nil)
-        allow(Resolv::DNS).to receive(:open).and_yield(resolver)
-
+        allow(Addrinfo).to receive(:foreach).with('example.com', nil, nil, :SOCK_STREAM)
+                                            .and_yield(Addrinfo.new(["AF_INET", 0, "example.com", "0.0.0.0"], :PF_INET, :SOCK_STREAM))
+                                            .and_yield(Addrinfo.new(["AF_INET6", 0, "example.com", "2001:db8::face"], :PF_INET6, :SOCK_STREAM))
         expect { subject.perform }.to raise_error Mastodon::ValidationError
       end
     end

@@ -128,9 +128,9 @@ class Formatter
     return html if emojis.empty?
 
     emoji_map = if animate
-                  emojis.each_with_object({}) { |e, h| h[e.shortcode] = full_asset_url(e.image.url) }
+                  emojis.map { |e| [e.shortcode, full_asset_url(e.image.url)] }.to_h
                 else
-                  emojis.each_with_object({}) { |e, h| h[e.shortcode] = full_asset_url(e.image.url(:static)) }
+                  emojis.map { |e| [e.shortcode, full_asset_url(e.image.url(:static))] }.to_h
                 end
 
     i                     = -1

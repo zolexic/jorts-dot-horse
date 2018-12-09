@@ -136,15 +136,14 @@ class FetchLinkCardService < BaseService
     detector = CharlockHolmes::EncodingDetector.new
     detector.strip_tags = true
 
-    guess      = detector.detect(@html, @html_charset)
-    page       = Nokogiri::HTML(@html, nil, guess&.fetch(:encoding, nil))
-    player_url = meta_property(page, 'twitter:player')
+    guess = detector.detect(@html, @html_charset)
+    page  = Nokogiri::HTML(@html, nil, guess&.fetch(:encoding, nil))
 
-    if player_url && !bad_url?(Addressable::URI.parse(player_url))
+    if meta_property(page, 'twitter:player')
       @card.type   = :video
       @card.width  = meta_property(page, 'twitter:player:width') || 0
       @card.height = meta_property(page, 'twitter:player:height') || 0
-      @card.html   = content_tag(:iframe, nil, src: player_url,
+      @card.html   = content_tag(:iframe, nil, src: meta_property(page, 'twitter:player'),
                                                width: @card.width,
                                                height: @card.height,
                                                allowtransparency: 'true',

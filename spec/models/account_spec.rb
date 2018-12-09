@@ -618,14 +618,8 @@ RSpec.describe Account, type: :model do
         expect(account).not_to model_have_error_on_field(:username)
       end
 
-      it 'is valid even if the username contains hyphens' do
+      it 'is invalid if the username doesn\'t only contains letters, numbers and underscores' do
         account = Fabricate.build(:account, domain: 'domain', username: 'the-doctor')
-        account.valid?
-        expect(account).to_not model_have_error_on_field(:username)
-      end
-
-      it 'is invalid if the username doesn\'t only contains letters, numbers, underscores and hyphens' do
-        account = Fabricate.build(:account, domain: 'domain', username: 'the doctor')
         account.valid?
         expect(account).to model_have_error_on_field(:username)
       end
