@@ -29,12 +29,12 @@ services:
 
   web:
 #    build: .
-    image: zolexic/jorts-dot-horse:v2.6.12-J
+    image: zolexic/jorts-dot-horse:v2.6.5-J
     restart: always
     env_file: .env.production
     environment:
       - WEB_CONCURRENCY=1
-      - MAX_THREADS=66
+      - MAX_THREADS=133
     command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000 -b '0.0.0.0'"
     networks:
       - external_network
@@ -52,7 +52,7 @@ services:
 
   streaming:
 #    build: .
-    image: zolexic/jorts-dot-horse:v2.6.12-J
+    image: zolexic/jorts-dot-horse:v2.6.5-J
     restart: always
     env_file: .env.production
     command: yarn start
@@ -67,12 +67,12 @@ services:
 
   sidekiq:
 #    build: .
-    image: zolexic/jorts-dot-horse:v2.6.12-J
+    image: zolexic/jorts-dot-horse:v2.6.5-J
     restart: always
     env_file: .env.production
     environment:
-      - DB_POOL=132
-    command: bundle exec sidekiq -c 66 -q default -q push -q mailers -q pull
+      - DB_POOL=266
+    command: bundle exec sidekiq -c 133 -q default -q push -q mailers -q pull
     depends_on:
       - db
       - redis
