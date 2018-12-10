@@ -29,7 +29,7 @@ services:
 
   web:
 #    build: .
-    image: zolexic/jorts-dot-horse:v2.6.51-J
+    image: zolexic/jorts-dot-horse:v2.6.12-J
     restart: always
     env_file: .env.production
     environment:
@@ -52,7 +52,7 @@ services:
 
   streaming:
 #    build: .
-    image: zolexic/jorts-dot-horse:v2.6.51-J
+    image: zolexic/jorts-dot-horse:v2.6.12-J
     restart: always
     env_file: .env.production
     command: yarn start
@@ -67,7 +67,7 @@ services:
 
   sidekiq:
 #    build: .
-    image: zolexic/jorts-dot-horse:v2.6.51-J
+    image: zolexic/jorts-dot-horse:v2.6.12-J
     restart: always
     env_file: .env.production
     environment:
