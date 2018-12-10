@@ -28,8 +28,8 @@ services:
 #      - ./elasticsearch:/usr/share/elasticsearch/data
 
   web:
-    build: .
-    #image: zolexic/jorts-dot-horse:v2.6.1-J
+    #build: .
+    image: tootsuite/mastodon:v2.6.5
     restart: always
     env_file: .env.production
     environment:
@@ -51,8 +51,8 @@ services:
       - ./public/packs:/mastodon/public/packs
 
   streaming:
-    build: .
-    #image: zolexic/jorts-dot-horse:v2.6.1-J
+    #build: .
+    image: tootsuite/mastodon:v2.6.5
     restart: always
     env_file: .env.production
     command: yarn start
@@ -66,8 +66,8 @@ services:
       - redis
 
   sidekiq:
-    build: .
-    #image: zolexic/jorts-dot-horse:v2.6.1-J
+    #build: .
+    image: tootsuite/mastodon:v2.6.5
 
     restart: always
     env_file: .env.production
