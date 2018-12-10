@@ -28,13 +28,8 @@ services:
 #      - ./elasticsearch:/usr/share/elasticsearch/data
 
   web:
-<<<<<<< HEAD
-#    build: .
-    image: zolexic/jorts-dot-horse:v2.6.12-J
-=======
     build: .
-    image: zolexic/jorts-dot-horse:v2.6.1-J
->>>>>>> d8ec5b05e38814b83a7c5d81bca7fdb9214b7043
+    #image: zolexic/jorts-dot-horse:v2.6.1-J
     restart: always
     env_file: .env.production
     environment:
@@ -56,13 +51,8 @@ services:
       - ./public/packs:/mastodon/public/packs
 
   streaming:
-<<<<<<< HEAD
-#    build: .
-    image: zolexic/jorts-dot-horse:v2.6.12-J
-=======
     build: .
-    image: zolexic/jorts-dot-horse:v2.6.1-J
->>>>>>> d8ec5b05e38814b83a7c5d81bca7fdb9214b7043
+    #image: zolexic/jorts-dot-horse:v2.6.1-J
     restart: always
     env_file: .env.production
     command: yarn start
@@ -76,13 +66,9 @@ services:
       - redis
 
   sidekiq:
-<<<<<<< HEAD
-#    build: .
-    image: zolexic/jorts-dot-horse:v2.6.12-J
-=======
     build: .
-    image: zolexic/jorts-dot-horse:v2.6.1-J
->>>>>>> d8ec5b05e38814b83a7c5d81bca7fdb9214b7043
+    #image: zolexic/jorts-dot-horse:v2.6.1-J
+
     restart: always
     env_file: .env.production
     environment:
