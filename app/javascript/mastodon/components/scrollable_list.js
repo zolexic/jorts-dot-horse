@@ -28,7 +28,6 @@ export default class ScrollableList extends PureComponent {
     hasMore: PropTypes.bool,
     prepend: PropTypes.node,
     alwaysPrepend: PropTypes.bool,
-    alwaysShowScrollbar: PropTypes.bool,
     emptyMessage: PropTypes.node,
     children: PropTypes.node,
   };
@@ -48,7 +47,7 @@ export default class ScrollableList extends PureComponent {
       const { scrollTop, scrollHeight, clientHeight } = this.node;
       const offset = scrollHeight - scrollTop - clientHeight;
 
-      if (400 > offset && this.props.onLoadMore && !this.props.isLoading) {
+      if (400 > offset && this.props.onLoadMore && this.props.hasMore && !this.props.isLoading) {
         this.props.onLoadMore();
       }
 
@@ -57,12 +56,29 @@ export default class ScrollableList extends PureComponent {
       } else if (this.props.onScroll) {
         this.props.onScroll();
       }
+
+      if (!this.lastScrollWasSynthetic) {
+        // If the last scroll wasn't caused by setScrollTop(), assume it was
+        // intentional and cancel any pending scroll reset on mouse idle
+        this.scrollToTopOnMouseIdle = false;
+      }
+      this.lastScrollWasSynthetic = false;
     }
   }, 150, {
     trailing: true,
   });
 
   mouseIdleTimer = null;
+  mouseMovedRecently = false;
+  lastScrollWasSynthetic = false;
+  scrollToTopOnMouseIdle = false;
+
+  setScrollTop = newScrollTop => {
+    if (this.node.scrollTop !== newScrollTop) {
+      this.lastScrollWasSynthetic = true;
+      this.node.scrollTop = newScrollTop;
+    }
+  };
 
   clearMouseIdleTimer = () => {
     if (this.mouseIdleTimer === null) {
@@ -78,38 +94,34 @@ export default class ScrollableList extends PureComponent {
     this.clearMouseIdleTimer();
     this.mouseIdleTimer = setTimeout(this.handleMouseIdle, MOUSE_IDLE_DELAY);
 
-    this.setState(({
-      mouseMovedRecently,
-      scrollToTopOnMouseIdle,
-    }) => ({
-      mouseMovedRecently: true,
-      // Only set scrollToTopOnMouseIdle if we just started moving and were
-      // scrolled to the top. Otherwise, just retain the previous state.
-      scrollToTopOnMouseIdle:
-        mouseMovedRecently
-          ? scrollToTopOnMouseIdle
-          : (this.node.scrollTop === 0),
-    }));
-  }, MOUSE_IDLE_DELAY / 2);
-
-  handleMouseIdle = () => {
-    if (this.state.scrollToTopOnMouseIdle) {
-      this.node.scrollTop = 0;
-
-      if (this.props.onScrollToTop) {
-        this.props.onScrollToTop();
-      }
+    if (!this.mouseMovedRecently && this.node.scrollTop === 0) {
+      // Only set if we just started moving and are scrolled to the top.
+      this.scrollToTopOnMouseIdle = true;
     }
 
-    this.setState({
-      mouseMovedRecently: false,
-      scrollToTopOnMouseIdle: false,
-    });
+    // Save setting this flag for last, so we can do the comparison above.
+    this.mouseMovedRecently = true;
+  }, MOUSE_IDLE_DELAY / 2);
+
+  handleWheel = throttle(() => {
+    this.scrollToTopOnMouseIdle = false;
+  }, 150, {
+    trailing: true,
+  });
+
+  handleMouseIdle = () => {
+    if (this.scrollToTopOnMouseIdle) {
+      this.setScrollTop(0);
+    }
+
+    this.mouseMovedRecently = false;
+    this.scrollToTopOnMouseIdle = false;
   }
 
   componentDidMount () {
     this.attachScrollListener();
     this.attachIntersectionObserver();
+
     attachFullscreenListener(this.onFullScreenChange);
 
     // Handle initial scroll posiiton
@@ -120,7 +132,8 @@ export default class ScrollableList extends PureComponent {
     const someItemInserted = React.Children.count(prevProps.children) > 0 &&
       React.Children.count(prevProps.children) < React.Children.count(this.props.children) &&
       this.getFirstChildKey(prevProps) !== this.getFirstChildKey(this.props);
-    if (someItemInserted && this.node.scrollTop > 0) {
+
+    if (someItemInserted && (this.node.scrollTop > 0 || this.mouseMovedRecently)) {
       return this.node.scrollHeight - this.node.scrollTop;
     } else {
       return null;
@@ -131,11 +144,7 @@ export default class ScrollableList extends PureComponent {
     // Reset the scroll position when a new child comes in in order not to
     // jerk the scrollbar around if you're already scrolled down the page.
     if (snapshot !== null) {
-      const newScrollTop = this.node.scrollHeight - snapshot;
-
-      if (this.node.scrollTop !== newScrollTop) {
-        this.node.scrollTop = newScrollTop;
-      }
+      this.setScrollTop(this.node.scrollHeight - snapshot);
     }
   }
 
@@ -162,10 +171,12 @@ export default class ScrollableList extends PureComponent {
 
   attachScrollListener () {
     this.node.addEventListener('scroll', this.handleScroll);
+    this.node.addEventListener('wheel', this.handleWheel);
   }
 
   detachScrollListener () {
     this.node.removeEventListener('scroll', this.handleScroll);
+    this.node.removeEventListener('wheel', this.handleWheel);
   }
 
   getFirstChildKey (props) {
@@ -191,11 +202,11 @@ export default class ScrollableList extends PureComponent {
   }
 
   render () {
-    const { children, scrollKey, trackScroll, shouldUpdateScroll, showLoading, isLoading, hasMore, prepend, alwaysPrepend, alwaysShowScrollbar, emptyMessage, onLoadMore } = this.props;
+    const { children, scrollKey, trackScroll, shouldUpdateScroll, showLoading, isLoading, hasMore, prepend, alwaysPrepend, emptyMessage, onLoadMore } = this.props;
     const { fullscreen } = this.state;
     const childrenCount = React.Children.count(children);
 
-    const loadMore     = (hasMore && childrenCount > 0 && onLoadMore) ? <LoadMore visible={!isLoading} onClick={this.handleLoadMore} /> : null;
+    const loadMore     = (hasMore && onLoadMore) ? <LoadMore visible={!isLoading} onClick={this.handleLoadMore} /> : null;
     let scrollableArea = null;
 
     if (showLoading) {
@@ -210,7 +221,7 @@ export default class ScrollableList extends PureComponent {
           </div>
         </div>
       );
-    } else if (isLoading || childrenCount > 0 || !emptyMessage) {
+    } else if (isLoading || childrenCount > 0 || hasMore || !emptyMessage) {
       scrollableArea = (
         <div className={classNames('scrollable', { fullscreen })} ref={this.setRef} onMouseMove={this.handleMouseMove}>
           <div role='feed' className='item-list'>
@@ -234,10 +245,8 @@ export default class ScrollableList extends PureComponent {
         </div>
       );
     } else {
-      const scrollable = alwaysShowScrollbar;
-
       scrollableArea = (
-        <div className={classNames({ scrollable, fullscreen })} ref={this.setRef} style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column' }}>
+        <div className={classNames('scrollable scrollable--flex', { fullscreen })} ref={this.setRef}>
           {alwaysPrepend && prepend}
 
           <div className='empty-column-indicator'>
