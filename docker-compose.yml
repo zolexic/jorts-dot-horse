@@ -35,7 +35,7 @@ services:
 
   web:
     #build: .
-    image: tootsuite/mastodon:v2.6.5
+    image: tootsuite/mastodon:edge
     restart: always
     env_file: .env.production
     environment:
@@ -60,7 +60,7 @@ services:
 
   streaming:
     #build: .
-    image: tootsuite/mastodon:v2.6.5
+    image: tootsuite/mastodon:edge
     restart: always
     env_file: .env.production
     command: yarn start
@@ -77,7 +77,7 @@ services:
 
   sidekiq:
     #build: .
-    image: tootsuite/mastodon:v2.6.5
+    image: tootsuite/mastodon:edge
 
     restart: always
     env_file: .env.production
