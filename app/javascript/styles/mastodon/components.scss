@@ -105,6 +105,10 @@
       border-color: lighten($ui-primary-color, 4%);
       color: lighten($darker-text-color, 4%);
     }
+
+    &:disabled {
+      opacity: 0.5;
+    }
   }
 
   &.button--block {
@@ -5169,7 +5173,7 @@ noscript {
 
   .icon-button {
     flex: 0 0 auto;
-    margin-left: 5px;
+    margin: 0 5px;
   }
 }
 

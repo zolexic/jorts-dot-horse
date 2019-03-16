@@ -7,7 +7,6 @@ oc:
     administered_by: 'Gerida per :'
     api: API
     apps: Aplicacions per mobil
-    closed_registrations: Las inscripcions son clavadas pel moment sus aquesta instància.
     contact: Contacte
     contact_missing: Pas parametrat
     contact_unavailable: Pas disponible
@@ -15,19 +14,9 @@ oc:
     extended_description_html: |
       <h3>Una bona plaça per las règlas</h3>
       <p>La descripcion longa es pas estada causida pel moment.</p>
-    features:
-      humane_approach_body: Amb l’experiéncia dels fracasses d’autres malhums, Mastodon ten per objectiu de lutar contra los abuses dels malhums socials en far de causidas eticas.
-      humane_approach_title: Un biais mai uman
-      not_a_product_body: Mastodon es pas un malhum comercial. Pas cap de reclama, d’utilizacion de vòstras donadas o d’òrt daurat clavat. I a pas cap d’autoritat centrala.
-      not_a_product_title: Sètz una persona, non pas un produit
-      real_conversation_body: Amb 500 caractèrs a vòstra disposicion e un nivèl de confidencialitat per cada publicacion, podètz vos exprimir coma volètz.
-      real_conversation_title: Fach per de conversacions vertadièras
-      within_reach_body: Multiplas aplicacion per iOS, Android, e autras plataformas mercés a un entorn API de bon utilizar, vos permet de gardar lo contacte pertot.
-      within_reach_title: Totjorn al costat
     generic_description: "%{domain} es un dels servidors del malhum"
     hosted_on: Mastodon albergat sus %{domain}
     learn_more: Ne saber mai
-    other_instances: Lista d’instàncias
     privacy_policy: Politica de confidencialitat
     source_code: Còdi font
     status_count_after:
@@ -302,6 +291,7 @@ oc:
       back_to_account: Tornar al compte
       title: Seguidors de %{acct}
     instances:
+      by_domain: Domeni
       delivery_available: Liurason disponibla
       known_accounts:
         one: "%{count} compte conegut"
@@ -410,9 +400,6 @@ oc:
         min_invite_role:
           disabled: Degun
           title: Autorizat amb invitacions
-        open:
-          desc_html: Autorizar lo monde a se marcar
-          title: Inscripcions
       show_known_fediverse_at_about_page:
         desc_html: Un còp activat mostrarà los tuts de totes los fediverse dins l’apercebut. Autrament mostrarà pas que los tuts locals.
         title: Mostrar los fediverse coneguts dins l’apercebut del flux
@@ -507,13 +494,11 @@ oc:
     logout: Se desconnectar
     migrate_account: Mudar endacòm mai
     migrate_account_html: Se volètz mandar los visitors d’aqueste compte a un autre, podètz<a href="%{path}"> o configurar aquí</a>.
-    or: o
     or_log_in_with: O autentificatz-vos amb
     providers:
       cas: CAS
       saml: SAML
     register: Se marcar
-    register_elsewhere: Se marcar endacòm mai
     resend_confirmation: Tornar mandar las instruccions de confirmacion
     reset_password: Reïnicializar lo senhal
     security: Seguretat
@@ -644,6 +629,10 @@ oc:
     lists: Listas
     mutes: Personas rescondudas
     storage: Mèdias gardats
+  featured_tags:
+    add_new: Ajustar una etiqueta nòva
+    errors:
+      limit: Avètz ja utilizat lo maximum d’etiquetas
   filters:
     contexts:
       home: Flux d’acuèlh
@@ -684,10 +673,16 @@ oc:
       one: I a quicòm que truca ! Mercés de corregir l’error çai-jos
       other: I a quicòm que truca ! Mercés de corregir las %{count} errors çai-jos
   imports:
+    modes:
+      merge: Fondre
+      merge_long: Gardar los enregistraments existents e ajustar los nòus
+      overwrite: Remplaçar
+      overwrite_long: Remplaçar los enregistraments actuals pels nòus
     preface: Podètz importar qualques donadas coma lo monde que seguètz o blocatz a-n aquesta instància d’un fichièr creat d’una autra instància.
     success: Vòstras donadas son ben estadas mandadas e seràn tractadas tre que possible
     types:
       blocking: Lista de blocatge
+      domain_blocking: Lista dels domenis blocats
       following: Lista de monde que seguètz
       muting: Lista de monde que volètz pas legir
     upload: Importar
@@ -713,7 +708,7 @@ oc:
     table:
       expires_at: Expirats
       uses: Usatges
-    title: Convidar de mond
+    title: Convidar de monde
   lists:
     errors:
       limit: Avètz atengut lo maximum de listas
@@ -856,9 +851,10 @@ oc:
     delete: Supression de compte
     development: Desvolopament
     edit_profile: Modificar lo perfil
-    export: Export donadas
+    export: Exportar de donadas
+    featured_tags: Etiquetas en avant
     followers: Seguidors autorizats
-    import: Importar
+    import: Importar de donadas
     migrate: Migracion de compte
     notifications: Notificacions
     preferences: Preferéncias
