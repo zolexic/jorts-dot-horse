@@ -34,7 +34,7 @@ services:
 #      - ./elasticsearch:/usr/share/elasticsearch/data
 
   web:
-    #build: .
+    build: .
     image: tootsuite/mastodon:edge
     restart: always
     env_file: .env.production
@@ -59,7 +59,7 @@ services:
       - ./public/packs:/mastodon/public/packs
 
   streaming:
-    #build: .
+    build: .
     image: tootsuite/mastodon:edge
     restart: always
     env_file: .env.production
@@ -76,7 +76,7 @@ services:
       - redis
 
   sidekiq:
-    #build: .
+    build: .
     image: tootsuite/mastodon:edge
 
     restart: always
